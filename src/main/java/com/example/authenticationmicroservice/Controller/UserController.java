@@ -2,12 +2,11 @@ package com.example.authenticationmicroservice.Controller;
 
 import com.example.authenticationmicroservice.Entity.User;
 import com.example.authenticationmicroservice.Service.UserService;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,11 +22,39 @@ public class UserController {
      * get all users
      * @return users
      */
-    @GetMapping(value = "/users")
+    @GetMapping(value = "/user")
     public ResponseEntity<List<User>> findALl() {
         return new ResponseEntity<>(this.userService.getUsers(), HttpStatus.OK);
     }
 
+    /**
+     * save a new user
+     * @return users
+     */
+    @PostMapping(value = "/user/save")
+    public ResponseEntity<User> save(@RequestBody User user) {
+        return new ResponseEntity<>(this.userService.saveUser(user), HttpStatus.CREATED);
+    }
+
+    /**
+     * add a role to a specific user
+     * @return void
+     */
+    @PutMapping(value="/user/add-role")
+    public ResponseEntity<?> updateUserRoles( RoleRequest roleRequest){
+        this.userService.addRoleToUser(roleRequest.userName , roleRequest.userName );
+         return new ResponseEntity<>(null , HttpStatus.CREATED) ;
+    }
+
+
+
+
+
+    @Data
+    class RoleRequest{
+        private String userName ;
+        private String roleName ;
+    }
 
 
 
