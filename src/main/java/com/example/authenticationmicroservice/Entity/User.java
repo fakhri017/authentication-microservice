@@ -27,7 +27,7 @@ public class User {
     private String email;
 
     /**
-     * email
+     * password
      */
     private String password;
 
