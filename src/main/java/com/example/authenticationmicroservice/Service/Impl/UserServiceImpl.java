@@ -7,17 +7,23 @@ import com.example.authenticationmicroservice.Repository.UserRepository;
 import com.example.authenticationmicroservice.Service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
-public class UserServiceImpl implements UserService   {
+public class UserServiceImpl implements UserService , UserDetailsService {
 
     final private UserRepository userRepository ;
     final private RoleRepository roleRepository ;
@@ -56,4 +62,20 @@ public class UserServiceImpl implements UserService   {
         log.info("find all users" );
         return userRepository.findAll();
     }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        final Optional<User> user = this.userRepository.findByUsername(username) ;
+        if(!user.isPresent()){
+            log.info("user not found ");
+            throw new UsernameNotFoundException("user not  found ") ;
+        }
+        else {
+            List<SimpleGrantedAuthority> authoroties = new ArrayList<>() ;
+            user.get().getRoles().forEach(role -> authoroties.add( new SimpleGrantedAuthority(role.getName())));
+            return new org.springframework.security.core.userdetails
+                    .User(user.get().getUsername() , user.get().getPassword() , authoroties ) ;
+        }
+
+     }
 }
