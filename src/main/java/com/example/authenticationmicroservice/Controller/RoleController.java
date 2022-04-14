@@ -2,7 +2,6 @@ package com.example.authenticationmicroservice.Controller;
 
 
 import com.example.authenticationmicroservice.Entity.Role;
-import com.example.authenticationmicroservice.Entity.User;
 import com.example.authenticationmicroservice.Service.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

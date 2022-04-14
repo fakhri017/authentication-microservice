@@ -51,7 +51,8 @@ public class UserController {
 
 
     @Data
-    class RoleRequest{
+
+    static  class RoleRequest{
         private String userName ;
         private String roleName ;
     }
